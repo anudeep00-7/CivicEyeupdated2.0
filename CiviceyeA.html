@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicEye: Your Voice, Your Community</title>
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+    <link rel="stylesheet" href="civiceye.css">
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loader" class="loader-container">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <i class="fas fa-eye"></i>
+                <span>CivicEye</span>
+            </div>
+            <div class="loader-spinner"></div>
+            <p>Loading your community...</p>
+        </div>
+    </div>
+
+    <!-- Landing Page -->
+    <div id="landing-page" class="landing-page">
+        <!-- Animated Background -->
+        <div class="animated-bg"></div>
+
+        <nav class="landing-nav">
+            <div class="nav-brand">
+                <i class="fas fa-eye"></i>
+                <span>CivicEye</span>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn login-btn" id="nav-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login / Sign Up
+                </button>
+                <button class="nav-btn primary-btn" id="nav-get-started">
+                    Get Started
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">Community Powered</div>
+                <h1 class="hero-title">
+                    Make Your
+                    <span class="gradient-text">Community</span>
+                    Better
+                </h1>
+                <p class="hero-description">
+                    Report issues, track progress, and collaborate with local NGOs to create positive change in your
+                    neighborhood.
+                </p>
+                <div class="hero-actions">
+                    <button class="primary-btn large-btn" id="hero-report">
+                        <i class="fas fa-plus"></i>
+                        Report an Issue
+                    </button>
+                    <button class="secondary-btn large-btn" id="hero-browse">
+                        <i class="fas fa-search"></i>
+                        Browse Issues
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number"></span>
+                        <span class="stat-label">Issues Resolved</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number"></span>
+                        <span class="stat-label">Active NGOs</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number"></span>
+                        <span class="stat-label">Community Members</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-card card-1">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Location Tagging</span>
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Progress Tracking</span>
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-users"></i>
+                    <span>Community Voting</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="container">
+                <h2>How CivicEye Works</h2>
+                <div class="features-grid">
+                    <div class="feature-card" data-aos="fade-up">
+                        <div class="feature-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3>Report Issues</h3>
+                        <p>Submit detailed reports with photos and precise location tagging for any civic problem.</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-icon">
+                            <i class="fas fa-vote-yea"></i>
+                        </div>
+                        <h3>Community Voting</h3>
+                        <p>Upvote important issues to increase visibility and prioritize community concerns.</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-icon">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h3>NGO Collaboration</h3>
+                        <p>Connect with local NGOs who can help resolve the issues that matter most.</p>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Track Progress</h3>
+                        <p>Follow your reports from submission to resolution with real-time status updates.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Welcome to CivicEye</h2>
+                <button class="close-modal" id="close-login">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="login-tabs">
+                <button class="tab-btn active" data-tab="user-login">User Login</button>
+                <button class="tab-btn" data-tab="ngo-login">NGO Login</button>
+            </div>
+
+            <form id="user-login-form" class="login-form active">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username-input" placeholder="Enter your username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password-input" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="primary-btn full-width">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Login as User
+                </button>
+            </form>
+
+            <form id="ngo-login-form" class="login-form">
+                <div class="input-group">
+                    <i class="fas fa-building"></i>
+                    <input type="text" id="ngo-username" placeholder="NGO Username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="ngo-password" placeholder="NGO Password" required>
+                </div>
+                <button type="submit" class="primary-btn full-width">
+                    <i class="fas fa-hands-helping"></i>
+                    Login as NGO
+                </button>
+            </form>
+
+            <div class="auth-switch">
+                <p>Don't have an account? <a href="#" id="show-signup-link">Create Account</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign-Up Modal -->
+    <div id="signup-modal" class="modal">
+        <div class="modal-content signup-modal-content">
+            <div class="modal-header">
+                <h2>Join CivicEye</h2>
+                <button class="close-modal" id="close-signup">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="signup-tabs">
+                <button class="signup-tab-btn active" data-signup-tab="user-signup">
+                    <i class="fas fa-user"></i>
+                    Sign Up as User
+                </button>
+                <button class="signup-tab-btn" data-signup-tab="ngo-signup">
+                    <i class="fas fa-building"></i>
+                    Sign Up as NGO
+                </button>
+            </div>
+
+            <!-- User Sign-Up Form -->
+            <form id="user-signup-form" class="signup-form active">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="user-fullname" placeholder="Full Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="user-email" placeholder="Email Address" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="user-password" placeholder="Password (min 6 characters)" required
+                        minlength="6">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="user-confirm-password" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="primary-btn full-width">
+                    <i class="fas fa-user-plus"></i>
+                    Create User Account
+                </button>
+
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+
+                <button type="button" id="google-signup-user" class="google-btn full-width">
+                    <i class="fab fa-google"></i>
+                    Sign Up with Google
+                </button>
+            </form>
+
+            <!-- NGO Sign-Up Form -->
+            <form id="ngo-signup-form" class="signup-form">
+                <div class="input-group">
+                    <i class="fas fa-building"></i>
+                    <input type="text" id="ngo-org-name" placeholder="Organization Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="ngo-email" placeholder="Official Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="ngo-signup-password" placeholder="Password (min 6 characters)" required
+                        minlength="6">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="ngo-confirm-password" placeholder="Confirm Password" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" id="ngo-city" placeholder="City / Location" required>
+                </div>
+                <div class="input-group select-group">
+                    <i class="fas fa-tags"></i>
+                    <select id="ngo-category" required>
+                        <option value="">Select NGO Category</option>
+                        <option value="environment">Environment & Conservation</option>
+                        <option value="education">Education & Youth</option>
+                        <option value="health">Health & Medical</option>
+                        <option value="humanitarian">Humanitarian Aid</option>
+                        <option value="community">Community Development</option>
+                        <option value="animal">Animal Welfare</option>
+                        <option value="infrastructure">Infrastructure & Urban</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <button type="submit" class="primary-btn full-width">
+                    <i class="fas fa-building"></i>
+                    Create NGO Account
+                </button>
+
+                <div class="auth-divider">
+                    <span>or</span>
+                </div>
+
+                <button type="button" id="google-signup-ngo" class="google-btn full-width">
+                    <i class="fab fa-google"></i>
+                    Sign Up with Google
+                </button>
+            </form>
+
+            <div class="auth-switch">
+                <p>Already have an account? <a href="#" id="show-login-link">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" style="display: none;">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo">
+                        <i class="fas fa-eye"></i>
+                        <span>CivicEye</span>
+                    </div>
+                    <nav class="main-nav" id="main-nav">
+                        <!-- Navigation will be populated by JavaScript -->
+                    </nav>
+                </div>
+                <div class="header-right">
+                    <div class="user-info" id="user-info"></div>
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-moon" id="theme-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view-container active">
+                <div class="dashboard-header">
+                    <h1>Community Dashboard</h1>
+                    <p>Welcome back! Here's what's happening in your community.</p>
+                </div>
+
+                <!-- Weather and News Section -->
+                <div class="info-grid">
+                    <div class="weather-card">
+                        <h3><i class="fas fa-cloud-sun"></i> Current Weather</h3>
+                        <div id="weather-content">
+                            <div class="weather-main">
+                                <div id="weather-icon">⛅</div>
+                                <div class="weather-details">
+                                    <div id="weather-temp">--°C</div>
+                                    <div id="weather-desc">Loading...</div>
+                                </div>
+                            </div>
+                            <div class="weather-extra">
+                                <div class="weather-info">
+                                    <i class="fas fa-wind"></i>
+                                    <span id="weather-wind">-- km/h</span>
+                                </div>
+                                <div class="weather-info">
+                                    <i class="fas fa-tint"></i>
+                                    <span id="weather-humidity">--%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="news-section">
+                        <div class="news-tabs">
+                            <button class="news-tab active" data-category="local">Local News</button>
+                            <button class="news-tab" data-category="world">World News</button>
+                        </div>
+                        <div id="news-content" class="news-content">
+                            <!-- News items will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="pending-count">0</span>
+                            <span class="stat-label">Pending Issues</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon progress">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="progress-count">0</span>
+                            <span class="stat-label">In Progress</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon resolved">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="resolved-count">0</span>
+                            <span class="stat-label">Resolved</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <div class="map-section">
+                        <div id="issues-map" class="map-container"></div>
+                    </div>
+
+                    <div class="recent-issues">
+                        <div class="section-header">
+                            <h2>Recent Issues</h2>
+                            <button class="primary-btn" onclick="showView('issues-view')">
+                                View All
+                            </button>
+                        </div>
+                        <div id="recent-issues-container" class="issues-feed"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Issues View -->
+            <div id="issues-view" class="view-container">
+                <div class="view-header">
+                    <h1>Community Issues</h1>
+                    <p>Browse and vote on issues reported by your community</p>
+                </div>
+
+                <div class="issues-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="issues-search" placeholder="Search issues...">
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="all">All Issues</button>
+                        <button class="filter-btn" data-filter="pending">Pending</button>
+                        <button class="filter-btn" data-filter="inprogress">In Progress</button>
+                        <button class="filter-btn" data-filter="resolved">Resolved</button>
+                    </div>
+                    <div class="sort-options">
+                        <select id="sort-select">
+                            <option value="recent">Most Recent</option>
+                            <option value="voted">Most Voted</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="issues-content">
+                    <div id="issues-feed-container" class="issues-grid"></div>
+                </div>
+            </div>
+
+            <!-- Submit Issue View -->
+            <div id="submit-view" class="view-container">
+                <div class="view-header">
+                    <h1>Report an Issue</h1>
+                    <p>Help improve your community by reporting issues that need attention</p>
+                </div>
+
+                <form id="report-form" class="report-form">
+                    <div class="form-section">
+                        <h3>Issue Details</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="title-input">Issue Title *</label>
+                                <input type="text" id="title-input" placeholder="e.g., Pothole on Main Street" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="category-select">Category *</label>
+                                <select id="category-select" required>
+                                    <option value="">Select a category</option>
+                                    <option value="infrastructure">Infrastructure</option>
+                                    <option value="sanitation">Sanitation</option>
+                                    <option value="safety">Safety</option>
+                                    <option value="environment">Environment</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description-input">Description *</label>
+                            <textarea id="description-input" placeholder="Please describe the issue in detail..."
+                                rows="4" required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Location</h3>
+                        <div class="location-info">
+                            <div class="location-status">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span id="location-text">Getting your location...</span>
+                            </div>
+                            <div id="location-map-preview" class="map-preview"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Attach Photos</h3>
+                        <div class="photo-upload">
+                            <div class="upload-area" id="upload-area">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click to upload or drag and drop</p>
+                                <span>PNG, JPG up to 5MB</span>
+                                <input type="file" id="photo-input" accept="image/*" multiple>
+                            </div>
+                            <div id="photo-preview" class="photo-preview"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="secondary-btn" onclick="showView('dashboard-view')">
+                            Cancel
+                        </button>
+                        <button type="submit" class="primary-btn submit-btn">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Profile View -->
+            <div id="profile-view" class="view-container">
+                <div class="view-header">
+                    <h1>My Profile</h1>
+                    <p>Manage your account and track your contributions</p>
+                </div>
+
+                <div class="profile-content">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h2 id="profile-username">Username</h2>
+                            <p id="profile-email" class="profile-email"><i class="fas fa-envelope"></i>
+                                <span>Loading...</span></p>
+                            <p id="profile-role" class="profile-role-badge"><i class="fas fa-shield-alt"></i>
+                                <span>Role</span></p>
+                            <p id="profile-member-since" class="profile-member-since"><i
+                                    class="fas fa-calendar-alt"></i> Member since: <span>Loading...</span></p>
+                            <div class="profile-stats">
+                                <div class="profile-stat">
+                                    <span class="stat-value" id="profile-karma">0</span>
+                                    <span class="stat-label">Karma</span>
+                                </div>
+                                <div class="profile-stat">
+                                    <span class="stat-value" id="profile-reports">0</span>
+                                    <span class="stat-label">Reports</span>
+                                </div>
+                                <div class="profile-stat">
+                                    <span class="stat-value" id="profile-resolved">0</span>
+                                    <span class="stat-label">Resolved</span>
+                                </div>
+                                <div class="profile-stat">
+                                    <span class="stat-value" id="profile-votes-received">0</span>
+                                    <span class="stat-label">Votes Received</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-sections">
+                        <div class="profile-section">
+                            <h3><i class="fas fa-paper-plane"></i> My Submissions</h3>
+                            <div id="user-reports-container" class="issues-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NGO Dashboard View -->
+            <div id="ngo-dashboard-view" class="view-container">
+                <div class="view-header">
+                    <h1>NGO Dashboard</h1>
+                    <p>Manage issues assigned to your organization</p>
+                </div>
+
+                <div class="ngo-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon assigned">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="assigned-count">0</span>
+                            <span class="stat-label">Assigned Issues</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon progress">
+                            <i class="fas fa-spinner"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="ngo-progress-count">0</span>
+                            <span class="stat-label">In Progress</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon resolved">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-number" id="ngo-resolved-count">0</span>
+                            <span class="stat-label">Resolved</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ngo-issues">
+                    <div class="section-header">
+                        <h2>Assigned Issues</h2>
+                        <div class="view-options">
+                            <select id="ngo-filter-select">
+                                <option value="all">All Issues</option>
+                                <option value="pending">Pending</option>
+                                <option value="inprogress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="ngo-issues-container" class="issues-grid"></div>
+                </div>
+            </div>
+
+            <!-- Admin Dashboard View -->
+            <div id="admin-dashboard-view" class="view-container">
+                <div class="view-header">
+                    <h1>Admin Dashboard</h1>
+                    <p>Manage community issues and NGO assignments</p>
+                </div>
+
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="moderation">Moderation</button>
+                    <button class="admin-tab" data-tab="ngos">NGO Management</button>
+                    <button class="admin-tab" data-tab="reports">Reports</button>
+                </div>
+
+                <div class="admin-content">
+                    <div id="moderation-section" class="admin-section active">
+                        <h3>Issue Moderation</h3>
+                        <div id="admin-issues-container" class="issues-grid"></div>
+                    </div>
+
+                    <div id="ngos-section" class="admin-section">
+                        <h3>NGO Management</h3>
+                        <div id="ngos-list-container"></div>
+                    </div>
+
+                    <div id="reports-section" class="admin-section">
+                        <h3>System Reports</h3>
+                        <div class="admin-stats">
+                            <div class="stat-card">
+                                <div class="stat-info">
+                                    <span class="stat-number" id="total-users">0</span>
+                                    <span class="stat-label">Total Users</span>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-info">
+                                    <span class="stat-number" id="total-reports">0</span>
+                                    <span class="stat-label">Total Reports</span>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-info">
+                                    <span class="stat-number" id="resolution-rate">0%</span>
+                                    <span class="stat-label">Resolution Rate</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Civic Assistant Chatbot Widget -->
+    <div id="chatbot-widget" class="chatbot-widget">
+        <!-- Toggle Button -->
+        <button id="chatbot-toggle" class="chatbot-toggle" aria-label="Open Civic Assistant">
+            <i class="fas fa-comments" id="chatbot-icon"></i>
+            <span class="chatbot-badge" id="chatbot-badge" style="display: none;">1</span>
+        </button>
+
+        <!-- Chat Container -->
+        <div id="chatbot-container" class="chatbot-container">
+            <div class="chatbot-header">
+                <div class="chatbot-header-info">
+                    <i class="fas fa-robot"></i>
+                    <div>
+                        <h4>Civic Assistant</h4>
+                        <span class="chatbot-status">Powered by Gemini AI</span>
+                    </div>
+                </div>
+                <button id="chatbot-close" class="chatbot-close" aria-label="Close chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div id="chatbot-messages" class="chatbot-messages">
+                <!-- Welcome message -->
+                <div class="chat-message bot-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>👋 Hello! I'm your <strong>Civic Assistant</strong>.</p>
+                        <p>I can help you with:</p>
+                        <ul>
+                            <li>Reporting civic issues</li>
+                            <li>Choosing the right category</li>
+                            <li>Understanding how CivicEye works</li>
+                            <li>NGO dashboard guidance</li>
+                        </ul>
+                        <p>How can I assist you today?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chatbot-input-area">
+                <div class="quick-actions">
+                    <button class="quick-action-btn" data-message="How do I report an issue?">📝 Report Issue</button>
+                    <button class="quick-action-btn" data-message="What categories are available?">📂
+                        Categories</button>
+                    <button class="quick-action-btn" data-message="How does issue resolution work?">⏱️
+                        Resolution</button>
+                </div>
+                <div class="chatbot-input-wrapper">
+                    <input type="text" id="chatbot-input" placeholder="Ask about CivicEye..." autocomplete="off">
+                    <button id="chatbot-send" class="chatbot-send" aria-label="Send message">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="civiceye.js"></script>
+
+    <!-- Civic Assistant Chatbot -->
+    <script src="chatbot.js"></script>
+</body>
+
+</html>
